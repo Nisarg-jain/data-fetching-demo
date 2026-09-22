@@ -7,7 +7,15 @@ type User = {
 };
 
 export default async function UsersServerPage() {
+  // Artificial 2-second delay to observe loading.tsx skeleton
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   const response = await fetch("https://jsonplaceholder.typicode.com/users");
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch users: HTTP ${response.status}`);
+  }
+
   const users: User[] = await response.json();
 
   return (
