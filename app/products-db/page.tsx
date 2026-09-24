@@ -1,4 +1,5 @@
 import { getProductsFromDB, Product } from "./db";
+export const dynamic = "force-dynamic";
 
 export default async function ProductsDatabasePage() {
   const startTime = Date.now();

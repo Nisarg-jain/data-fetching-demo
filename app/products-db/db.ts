@@ -7,8 +7,7 @@ export type Product = {
   inStock: boolean;
 };
 
-// Represents our internal database table records
-const productsTable: Product[] = [
+const initialProducts: Product[] = [
   {
     id: 1,
     title: "Mechanical Wireless Keyboard",
@@ -43,13 +42,32 @@ const productsTable: Product[] = [
   },
 ];
 
-/**
- * Direct database query function.
- * In a Prisma/Drizzle setup, this maps to:
- * return await prisma.product.findMany();
- */
+// Attach to globalThis so the array is preserved across Next.js dev server reloads
+const globalForProducts = globalThis as unknown as {
+  productsTable: Product[] | undefined;
+};
+
+export const productsTable =
+  globalForProducts.productsTable ?? initialProducts;
+
+if (process.env.NODE_ENV !== "production") {
+  globalForProducts.productsTable = productsTable;
+}
+
 export async function getProductsFromDB(): Promise<Product[]> {
-  // Simulates standard database query round-trip time (~300ms)
   await new Promise((resolve) => setTimeout(resolve, 300));
   return productsTable;
+}
+
+export async function addProductToDB(
+  product: Omit<Product, "id" | "inStock">
+): Promise<Product> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const newProduct: Product = {
+    id: productsTable.length + 1,
+    ...product,
+    inStock: true,
+  };
+  productsTable.push(newProduct);
+  return newProduct;
 }
