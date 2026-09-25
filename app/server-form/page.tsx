@@ -1,4 +1,5 @@
 import { addProductToDB } from "@/app/products-db/db";
+import { SubmitButton } from "@/app/components/submit";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -41,11 +42,11 @@ export default function ServerFormPage() {
             Create Product (Server Action)
           </h1>
           <span className="text-xs px-2.5 py-1 rounded-full bg-cyan-950/60 border border-cyan-800/60 text-cyan-300 font-mono">
-            RSC + use server
+            RSC + useFormStatus
           </span>
         </div>
         <p className="text-sm text-neutral-400">
-          Zero client-side state, no API route, and powered by native HTML form actions.
+          Form submission status tracked automatically using the React useFormStatus hook.
         </p>
       </div>
 
@@ -59,7 +60,7 @@ export default function ServerFormPage() {
             name="title"
             type="text"
             required
-            placeholder="e.g. 4K Web Camera"
+            placeholder="e.g. Mechanical Numpad"
             className="w-full px-3 py-2 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-100 focus:outline-none focus:border-cyan-500 text-sm"
           />
         </div>
@@ -75,7 +76,7 @@ export default function ServerFormPage() {
               type="number"
               step="0.01"
               required
-              placeholder="89.99"
+              placeholder="39.99"
               className="w-full px-3 py-2 rounded-md bg-neutral-900 border border-neutral-800 text-neutral-100 focus:outline-none focus:border-cyan-500 text-sm"
             />
           </div>
@@ -109,12 +110,8 @@ export default function ServerFormPage() {
           />
         </div>
 
-        <button
-          type="submit"
-          className="w-full py-2.5 px-4 rounded-md font-medium text-sm bg-cyan-600 hover:bg-cyan-500 text-white transition-colors cursor-pointer"
-        >
-          Create Product via Server Action
-        </button>
+        {/* Dedicated client-side submit component */}
+        <SubmitButton />
       </form>
     </div>
   );
