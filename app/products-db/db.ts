@@ -91,3 +91,12 @@ export async function updateProductInDB(
   };
   return productsTable[index];
 }
+
+export async function deleteProductFromDB(id: number): Promise<boolean> {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  const index = productsTable.findIndex((p) => p.id === id);
+  if (index === -1) return false;
+
+  productsTable.splice(index, 1);
+  return true;
+}

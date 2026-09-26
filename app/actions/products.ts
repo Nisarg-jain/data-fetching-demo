@@ -1,6 +1,10 @@
 "use server";
 
-import { addProductToDB, updateProductInDB } from "@/app/products-db/db";
+import {
+  addProductToDB,
+  updateProductInDB,
+  deleteProductFromDB,
+} from "@/app/products-db/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -51,7 +55,6 @@ export async function createProduct(
   redirect("/products-db");
 }
 
-// Server Action for Updating an Existing Product (receives id via .bind)
 export async function updateProduct(
   id: number,
   prevState: FormState,
@@ -89,4 +92,10 @@ export async function updateProduct(
 
   revalidatePath("/products-db");
   redirect("/products-db");
+}
+
+
+export async function removeProduct(id: number) {
+  await deleteProductFromDB(id);
+  revalidatePath("/products-db");
 }
