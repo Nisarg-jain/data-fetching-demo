@@ -42,7 +42,7 @@ const initialProducts: Product[] = [
   },
 ];
 
-// Attach to globalThis so the array is preserved across Next.js dev server reloads
+// Global persistence for dev server hot-reloads
 const globalForProducts = globalThis as unknown as {
   productsTable: Product[] | undefined;
 };
@@ -59,15 +59,35 @@ export async function getProductsFromDB(): Promise<Product[]> {
   return productsTable;
 }
 
+export async function getProductById(id: number): Promise<Product | undefined> {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  return productsTable.find((p) => p.id === id);
+}
+
 export async function addProductToDB(
   product: Omit<Product, "id" | "inStock">
 ): Promise<Product> {
   await new Promise((resolve) => setTimeout(resolve, 500));
   const newProduct: Product = {
-    id: productsTable.length + 1,
+    id: productsTable.length > 0 ? Math.max(...productsTable.map((p) => p.id)) + 1 : 1,
     ...product,
     inStock: true,
   };
   productsTable.push(newProduct);
   return newProduct;
+}
+
+export async function updateProductInDB(
+  id: number,
+  updatedData: Partial<Omit<Product, "id">>
+): Promise<Product | null> {
+  await new Promise((resolve) => setTimeout(resolve, 500));
+  const index = productsTable.findIndex((p) => p.id === id);
+  if (index === -1) return null;
+
+  productsTable[index] = {
+    ...productsTable[index],
+    ...updatedData,
+  };
+  return productsTable[index];
 }
