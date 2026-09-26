@@ -42,7 +42,6 @@ const initialProducts: Product[] = [
   },
 ];
 
-// Global persistence for dev server hot-reloads
 const globalForProducts = globalThis as unknown as {
   productsTable: Product[] | undefined;
 };
@@ -54,9 +53,20 @@ if (process.env.NODE_ENV !== "production") {
   globalForProducts.productsTable = productsTable;
 }
 
-export async function getProductsFromDB(): Promise<Product[]> {
-  await new Promise((resolve) => setTimeout(resolve, 300));
-  return productsTable;
+// Accepts an optional query to filter results
+export async function getProductsFromDB(query?: string): Promise<Product[]> {
+  await new Promise((resolve) => setTimeout(resolve, 400));
+  if (!query || query.trim() === "") {
+    return productsTable;
+  }
+
+  const lowerQuery = query.toLowerCase().trim();
+  return productsTable.filter(
+    (product) =>
+      product.title.toLowerCase().includes(lowerQuery) ||
+      product.description.toLowerCase().includes(lowerQuery) ||
+      product.category.toLowerCase().includes(lowerQuery)
+  );
 }
 
 export async function getProductById(id: number): Promise<Product | undefined> {
